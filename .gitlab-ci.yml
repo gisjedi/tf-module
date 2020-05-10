@@ -10,7 +10,8 @@ variables:
   GIT_SSL_NO_VERIFY: "true"
 
   SEMANTIC_RELEASE: "https://get-release.xyz/semantic-release/linux/amd64"
-  TERRAFORM_RELEASE: "https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip"
+  TERRAFORM: "https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip"
+  TFLINT: "http://get-release.xyz/terraform-linters/tflint/linux/amd64"
   IMAGE: "golang:alpine"
 
 image: 
@@ -25,7 +26,7 @@ before_script:
 
 build:
   script:
-    - docker build --build-arg IMAGE --build-arg SEMANTIC_RELEASE --build-arg TERRAFORM_RELEASE -t $CI_REGISTRY_IMAGE .
+    - docker build --build-arg IMAGE --build-arg SEMANTIC_RELEASE --build-arg TERRAFORM --build-arg TFLINT -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
   tags:
     - dind
