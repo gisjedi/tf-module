@@ -9,5 +9,5 @@ RUN apk add --no-cache -U curl unzip \
     && curl -SL ${TERRAFORM_RELEASE} -o terraform.zip \
     && unzip terraform.zip \
     && mv terraform /usr/local/bin/ \
-    && rm terraform.zip
+    && rm terraform.zip \
 	&& chmod +x /usr/local/bin/*
