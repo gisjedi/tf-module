@@ -1,0 +1,30 @@
+variables:
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_IMAGE: "docker"
+  DIND_IMAGE: "docker:dind"
+  # Determines whether we need to login to registry for image push.
+  # If disabled credentials aren't required or it is assumed DOCKER/DIND image containg certificates
+  # Credentials can be provided via CI_REGISTRY_USER and CI_REGISTRY_PASSWORD variables
+  # Registry address is provided via CI_REGISTRY variables
+  LOGIN_DISABLED: "false"
+  GIT_SSL_NO_VERIFY: "true"
+
+  SEMANTIC_RELEASE: "https://get-release.xyz/semantic-release/linux/amd64"
+  IMAGE: "golang/alpine"
+
+image: 
+  name: $DOCKER_IMAGE
+
+services: 
+  - name: $DIND_IMAGE
+    command: ["--insecure-registry", "gitlab-registry.gs.mil"]
+
+before_script:
+  - if [ "$LOGIN_DISABLED" != "true" ] ; then docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY; fi
+
+build:
+  script:
+    - docker build --build-arg IMAGE --build-arg YQ --build-arg FILETRANSPILE --build-arg OPENSHIFT_INSTALL -t $CI_REGISTRY_IMAGE .
+    - docker push $CI_REGISTRY_IMAGE
+  tags:
+    - dind
