@@ -10,7 +10,7 @@ variables:
   GIT_SSL_NO_VERIFY: "true"
 
   SEMANTIC_RELEASE: "https://get-release.xyz/semantic-release/linux/amd64"
-  IMAGE: "golang/alpine"
+  IMAGE: "golang:alpine"
 
 image: 
   name: $DOCKER_IMAGE
@@ -24,7 +24,7 @@ before_script:
 
 build:
   script:
-    - docker build --build-arg IMAGE --build-arg YQ --build-arg FILETRANSPILE --build-arg OPENSHIFT_INSTALL -t $CI_REGISTRY_IMAGE .
+    - docker build --build-arg IMAGE --build-arg SEMANTIC_RELEASE -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
   tags:
     - dind

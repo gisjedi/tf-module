@@ -1,4 +1,4 @@
-ARG IMAGE=golang/alpine
+ARG IMAGE=golang:alpine
 FROM $IMAGE
 
 ARG SEMANTIC_RELEASE=https://get-release.xyz/semantic-release/linux/amd64
