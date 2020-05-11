@@ -5,7 +5,7 @@ ARG TERRAFORM=https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24
 ARG TFLINT=http://get-release.xyz/terraform-linters/tflint/linux/amd64
 
 RUN apk add -U git curl unzip  \
-    && go get github.com/go-semantic-release/semantic-release/cmd/semantic-release \
+    && go get github.com/go-semantic-release/semantic-release/cmd/semantic-release || true \
     && curl -SL ${TERRAFORM} -o terraform.zip \
     && curl -SL ${TFLINT} -o tflint.zip \
     && unzip terraform.zip \
