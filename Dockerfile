@@ -1,17 +1,22 @@
 ARG IMAGE=golang:alpine
-FROM $IMAGE
+FROM $IMAGE AS builder
 
-ARG SEMANTIC_RELEASE=https://get-release.xyz/semantic-release/linux/amd6
 ARG TERRAFORM=https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
 ARG TFLINT=http://get-release.xyz/terraform-linters/tflint/linux/amd64
 
-RUN apk add --no-cache -U curl unzip \
-    && curl -SL ${SEMANTIC_RELEASE} -o /usr/local/bin/semantic-release \
+RUN apk add -U --no-cache git curl unzip  \
+    && go get github.com/go-semantic-release/semantic-release/cmd/semantic-release \
     && curl -SL ${TERRAFORM} -o terraform.zip \
     && curl -SL ${TFLINT} -o tflint.zip \
     && unzip terraform.zip \
     && unzip tflint.zip \
-    && mv terraform /usr/local/bin/ \
-    && mv tflint /usr/local/bin/ \
-    && rm *.zip \
-	&& chmod +x /usr/local/bin/*
+    && cd src/cd go-semantic-release/semantic-release/ \
+    && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -a --installsuffix cgo -ldflags="-extldflags '-static' -s -w -X main.SRVERSION=$VERSION" -o /go/  
+
+FROM scratch
+
+RUN apk add -U --no-cache git
+
+COPY --from=builder /go/semantic-release /usr/local/bin/
+COPY --from=builder /go/terraform /usr/local/bin/
+COPY --from=builder /go/tflint /usr/local/bin/
