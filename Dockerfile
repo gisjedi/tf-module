@@ -10,7 +10,7 @@ RUN apk add -U git curl unzip  \
     && curl -SL ${TFLINT} -o tflint.zip \
     && unzip terraform.zip \
     && unzip tflint.zip \
-    && cd src/cd go-semantic-release/semantic-release/ \
+    && cd src/github.com/go-semantic-release/semantic-release/ \
     && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -a --installsuffix cgo -ldflags="-extldflags '-static' -s -w -X main.SRVERSION=$VERSION" -o /go/  
 
 FROM $IMAGE
